@@ -13,6 +13,7 @@
 		<module>servicea</module>
 		<module>serviceb</module>
 		<module>eurekaserver</module>
+		<module>gateway-service</module>
 	</modules>
 
 
