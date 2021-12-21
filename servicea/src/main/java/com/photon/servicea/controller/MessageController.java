@@ -1,6 +1,10 @@
 package com.photon.servicea.controller;
 
 import com.photon.servicea.proxy.ServiceBProxy;
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -26,8 +30,16 @@ public class MessageController {
     public ResponseEntity<String> getMessage(){
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
+
     @GetMapping("/port")
+    @CircuitBreaker(name = "backendA",fallbackMethod = "fallback")
+    @Bulkhead(name="backendA")
+    @RateLimiter(name="backendA")
     public ResponseEntity<String> getPort(){
         return new ResponseEntity<>(serviceBProxy.getPort(), HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> fallback(RuntimeException e){
+        return new ResponseEntity<>("Fallback", HttpStatus.OK);
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/api/v1")
 @RefreshScope
@@ -23,7 +25,10 @@ public class MessageController {
     }
 
     @GetMapping("/port")
-    public ResponseEntity<String> getPort(){
-        return new ResponseEntity<>(port, HttpStatus.OK);
+    public ResponseEntity<String> getPort() throws InterruptedException, IOException {
+
+        Thread.sleep(6000);
+       // throw new IOException("Test Exception");
+       return new ResponseEntity<>(port, HttpStatus.OK);
     }
 }
